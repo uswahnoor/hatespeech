@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hate Speech Detection API - Documentation</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .endpoint { background: #f8f9fa; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #007bff; }
+        .method { display: inline-block; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+        .post { background: #28a745; color: white; }
+        .get { background: #17a2b8; color: white; }
+        pre { background: #f8f9fa; padding: 15px; border-radius: 4px; overflow-x: auto; }
+        code { background: #e9ecef; padding: 2px 4px; border-radius: 3px; }
+        .error-codes { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+        .error-code { background: #fff3cd; padding: 10px; border-radius: 4px; border-left: 3px solid #ffc107; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🛡️ Hate Speech Detection API</h1>
+        <p>AI-powered hate speech and toxicity detection for your applications</p>
+    </div>
+
+    <h2>🚀 Getting Started</h2>
+    <ol>
+        <li>Register an account at our website</li>
+        <li>Create an API key in your dashboard</li>
+        <li>Include the API key in <code>X-API-KEY</code> header</li>
+        <li>Send POST requests to <code>/api/detect/</code></li>
+    </ol>
+
+    <div class="endpoint">
+        <h3><span class="method post">POST</span> /api/detect/</h3>
+        <p>Detect hate speech and toxicity in text content</p>
+        
+        <h4>Headers:</h4>
+        <pre>Content-Type: application/json
+X-API-KEY: your-api-key-here</pre>
+
+        <h4>Request Body:</h4>
+        <pre>{
+  "text": "Text to analyze for hate speech"
+}</pre>
+
+        <h4>Response:</h4>
+        <pre>{
+  "classification": "safe",
+  "confidence": 0.95,
+  "sentiment": "positive",
+  "engine": "transformer",
+  "latency_ms": 145.2
+}</pre>
+    </div>
+
+    <div class="endpoint">
+        <h3><span class="method get">GET</span> /api/docs/</h3>
+        <p>Get API documentation in JSON format</p>
+    </div>
+
+    <h2>📋 Response Fields</h2>
+    <ul>
+        <li><code>classification</code>: Either "safe" or "toxic"</li>
+        <li><code>confidence</code>: Confidence score between 0 and 1</li>
+        <li><code>sentiment</code>: "positive", "negative", or "neutral"</li>
+        <li><code>engine</code>: AI model used for detection</li>
+        <li><code>latency_ms</code>: Processing time in milliseconds</li>
+    </ul>
+
+    <h2>⚠️ Error Codes</h2>
+    <div class="error-codes">
+        <div class="error-code">
+            <strong>400 Bad Request</strong><br>
+            Missing or invalid text
+        </div>
+        <div class="error-code">
+            <strong>401 Unauthorized</strong><br>
+            Missing API key
+        </div>
+        <div class="error-code">
+            <strong>403 Forbidden</strong><br>
+            Invalid API key
+        </div>
+        <div class="error-code">
+            <strong>500 Server Error</strong><br>
+            Model processing failed
+        </div>
+    </div>
+
+    <h2>🔧 Example Usage</h2>
+    
+    <h3>JavaScript (fetch)</h3>
+    <pre>const response = await fetch('http://localhost:8000/api/detect/', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'X-API-KEY': 'your-api-key-here'
+  },
+  body: JSON.stringify({
+    text: 'Hello, how are you today?'
+  })
+});
+
+const result = await response.json();
+console.log(result.classification); // "safe" or "toxic"</pre>
+
+    <h3>Python (requests)</h3>
+    <pre>import requests
+
+response = requests.post('http://localhost:8000/api/detect/', 
+  headers={'X-API-KEY': 'your-api-key-here'},
+  json={'text': 'Hello, how are you today?'}
+)
+
+result = response.json()
+print(result['classification'])  # "safe" or "toxic"</pre>
+
+    <h3>cURL</h3>
+    <pre>curl -X POST http://localhost:8000/api/detect/ \
+  -H "Content-Type: application/json" \
+  -H "X-API-KEY: your-api-key-here" \
+  -d '{"text": "Hello, how are you today?"}'</pre>
+
+    <h2>🔒 Rate Limits</h2>
+    <ul>
+        <li>60 requests per minute</li>
+        <li>1000 requests per hour</li>
+    </ul>
+
+    <h2>🏠 Dashboard</h2>
+    <p>Manage your API keys and view usage statistics at: <a href="http://localhost:8080">Dashboard</a></p>
+</body>
+</html>

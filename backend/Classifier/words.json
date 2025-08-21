@@ -1,0 +1,29 @@
+{
+    "hate_words": [
+        "abomination", "abuse", "aggressor", "airhead", "alien", "animal", "ape", "ass", "asshole",
+        "backward", "barbarian", "bastard", "beast", "bigot", "bimbo", "bitch", "blight", "blockhead",
+        "blunderer", "boob", "boor", "brainless", "brat", "buffoon", "bully", "bungler", "butcher",
+        "cancer", "cheap", "cheat", "choke", "clown", "cockroach", "condemn", "cow", "coward",
+        "cretin", "criminal", "crude", "crud", "cunt", "curse", "cutthroat", "deadbeat", "deceitful",
+        "deformed", "degenerate", "delinquent", "demon", "despot", "devil", "dimwit", "dirty",
+        "disgusting", "dishonest", "disease", "dog", "dope", "dork", "douche", "drain", "drunk",
+        "dumb", "dunce", "evil", "excrement", "failure", "fake", "fascist", "feeble", "filth",
+        "filthy", "fool", "fraud", "freak", "garbage", "ghoul", "goat", "goon", "greedy", "gross",
+        "grotesque", "hag", "halfwit", "hate", "hateful", "hideous", "hoax", "hog", "horrible",
+        "hostile", "idiot", "ignoramus", "ignorant", "imbecile", "imp", "incompetent", "infidel",
+        "inhuman", "insane", "insolent", "jackal", "jerk", "joker", "killer", "knave", "liar",
+        "loathsome", "loser", "lowlife", "lunatic", "madman", "maniac", "menace", "monster",
+        "moron", "murderer", "mutant", "nazi", "nobody", "numbskull", "ogre", "oppressor", "outcast",
+        "outsider", "overlord", "parasite", "pathetic", "peasant", "pervert", "pig", "pissant",
+        "plague", "poison", "pompous", "prick", "problem", "psychopath", "punk", "putrid",
+        "racist", "rat", "reject", "repulsive", "reptile", "repugnant", "revolting", "rogue",
+        "roughneck", "rude", "ruin", "sadist", "savage", "scab", "scallywag", "scandal", "scapegoat",
+        "scar", "scoundrel", "scum", "selfish", "serpent", "sham", "shame", "shameless", "shark",
+        "shrew", "sick", "simpleton", "sin", "skank", "slave", "slime", "slob", "slug", "smelly",
+        "snake", "snob", "sociopath", "soiled", "spawn", "spiteful", "spoiled", "stain", "stinker",
+        "stupid", "swine", "taint", "terrorist", "thief", "thug", "toxic", "trash", "troll",
+        "tyrant", "ugly", "unclean", "underdog", "unfit", "unholy", "unwanted", "useless", "vermin",
+        "villain", "vulgar", "waste", "weak", "weasel", "wicked", "witch", "worthless", "wretched",
+        "yob", "yokel", "zealot", "zombie"
+    ]
+}
