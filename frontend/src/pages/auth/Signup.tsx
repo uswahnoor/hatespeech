@@ -31,10 +31,22 @@ export default function Signup() {
       return;
     }
 
+    // Enhanced password validation
     if (formData.password.length < 8) {
       toast({
         title: "Weak password",
-        description: "Password must be at least 8 characters",
+        description: "Password must be at least 8 characters long",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Check for special character
+    const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+    if (!specialCharRegex.test(formData.password)) {
+      toast({
+        title: "Weak password",
+        description: "Password must contain at least one special character (!@#$%^&*()_+-=[]{}|;:',.<>?)",
         variant: "destructive",
       });
       return;
@@ -121,6 +133,9 @@ export default function Signup() {
                   onChange={handleChange}
                   required
                 />
+                <p className="text-xs text-muted-foreground">
+                  Password must be at least 8 characters and include a special character (!@#$%^&*()_+-=[]{}|;:',.<>?)
+                </p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="confirm_password">Confirm Password</Label>
