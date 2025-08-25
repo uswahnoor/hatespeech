@@ -134,7 +134,7 @@ export default function Signup() {
                   required
                 />
                 <p className="text-xs text-muted-foreground">
-                  Password must be at least 8 characters and include a special character (!@#$%^&*()_+-=[]{}|;:',.<>?)
+                  Password must be at least 8 characters and include a special character (!@#$%^&amp;*()_+-=[]{}|;:&quot;,.)
                 </p>
               </div>
               <div className="space-y-2">
