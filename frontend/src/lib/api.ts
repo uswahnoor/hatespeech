@@ -89,6 +89,18 @@ export const api = {
 
     resendVerification: (email: string) =>
       api.request('/auth/resend-verification', { method: 'POST', body: JSON.stringify({ email }) }),
+    
+    forgotPassword: (email: string) =>
+      api.request('/auth/forgot-password', { method: 'POST', body: JSON.stringify({ email }) }),
+    
+    validateResetToken: (token: string) =>
+      api.request(`/auth/validate-reset-token/${token}`),
+    
+    resetPassword: (token: string, password: string, confirm_password: string) =>
+      api.request('/auth/reset-password', { 
+        method: 'POST', 
+        body: JSON.stringify({ token, password, confirm_password }) 
+      }),
   },
 
   // User endpoints

@@ -11,6 +11,8 @@ import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
 import VerifyEmail from "./pages/auth/VerifyEmail";
 import VerifyAccount from "./pages/auth/VerifyAccount";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import ResetPassword from "./pages/auth/ResetPassword";
 import Profile from "./pages/Profile";
 import Detect from "./pages/Detect";
 import History from "./pages/History";
@@ -32,6 +34,8 @@ const App = () => (
             <Route path="/auth/signup" element={<Signup />} />
             <Route path="/auth/verify-email/:token" element={<VerifyEmail />} />
             <Route path="/auth/verify-account" element={<VerifyAccount />} />
+            <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+            <Route path="/auth/reset-password/:token" element={<ResetPassword />} />
             
             {/* Protected Routes */}
             <Route path="/" element={

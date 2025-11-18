@@ -34,4 +34,12 @@ urlpatterns = [
     path('api-keys/', views.list_api_keys, name='list_api_keys'),
     path('api-keys/create/', views.create_api_key, name='create_api_key'),
     path('api-keys/delete/<int:key_id>/', views.delete_api_key, name='delete_api_key'),
+    
+    # Password reset endpoints
+    path('forgot-password/', views.forgot_password, name='forgot_password'),
+    path('forgot-password', views.forgot_password),
+    path('reset-password/', views.reset_password, name='reset_password'),
+    path('reset-password', views.reset_password),
+    path('validate-reset-token/<str:token>/', views.validate_reset_token, name='validate_reset_token'),
+    path('validate-reset-token/<str:token>', views.validate_reset_token),
 ]

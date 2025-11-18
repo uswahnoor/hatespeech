@@ -33,6 +33,9 @@ class User(AbstractUser):
 
 # API Key model
 import uuid
+from django.utils import timezone
+from datetime import timedelta
+
 class APIKey(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='api_keys')
     key = models.CharField(max_length=64, unique=True, default=uuid.uuid4)
@@ -40,3 +43,25 @@ class APIKey(models.Model):
 
     def __str__(self):
         return f"{self.user.email} - {self.key}"
+
+
+# Password Reset Token model
+class PasswordResetToken(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='password_reset_tokens')
+    token = models.CharField(max_length=100, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_used = models.BooleanField(default=False)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def is_expired(self):
+        """Check if token is expired (valid for 1 hour)"""
+        return timezone.now() > self.created_at + timedelta(hours=1)
+    
+    def is_valid(self):
+        """Check if token is valid (not used and not expired)"""
+        return not self.is_used and not self.is_expired()
+    
+    def __str__(self):
+        return f"Password reset for {self.user.email}"

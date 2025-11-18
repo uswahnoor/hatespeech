@@ -7,9 +7,10 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from django.core.mail import send_mail
 from django.core.signing import Signer, BadSignature
 from django.conf import settings
-from .models import User, APIKey
-from .serializers import RegisterSerializer, ProfileSerializer, APIKeySerializer
+from .models import User, APIKey, PasswordResetToken
+from .serializers import RegisterSerializer, ProfileSerializer, APIKeySerializer, ForgotPasswordSerializer, ResetPasswordSerializer
 import uuid
+import secrets
 
 signer = Signer()
 
@@ -165,3 +166,110 @@ def resend_verification(request):
     return Response({
         'message': 'If an account with that email exists, we sent a verification email.'
     })
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def forgot_password(request):
+    """Send password reset email"""
+    serializer = ForgotPasswordSerializer(data=request.data)
+    if serializer.is_valid():
+        email = serializer.validated_data['email']
+        
+        try:
+            user = User.objects.get(email=email)
+            
+            # Invalidate existing tokens
+            PasswordResetToken.objects.filter(user=user, is_used=False).update(is_used=True)
+            
+            # Create new reset token
+            token = secrets.token_urlsafe(32)
+            PasswordResetToken.objects.create(user=user, token=token)
+            
+            # Send reset email
+            reset_link = f"{settings.FRONTEND_URL.rstrip('/')}/auth/reset-password/{token}"
+            try:
+                send_mail(
+                    "Reset Your Password",
+                    f"Click here to reset your password: {reset_link}\n\nThis link will expire in 1 hour.",
+                    settings.EMAIL_HOST_USER,
+                    [user.email],
+                    fail_silently=False,
+                )
+            except Exception as e:
+                print(f"Failed to send password reset email: {e}")
+                # Continue anyway - don't reveal email sending issues
+                pass
+                
+        except User.DoesNotExist:
+            # Don't reveal if email exists or not
+            pass
+        
+        return Response({
+            'message': 'If an account with that email exists, we sent a password reset link.'
+        })
+    
+    return Response(serializer.errors, status=400)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def reset_password(request):
+    """Reset password using token"""
+    serializer = ResetPasswordSerializer(data=request.data)
+    if serializer.is_valid():
+        token = serializer.validated_data['token']
+        password = serializer.validated_data['password']
+        
+        try:
+            reset_token = PasswordResetToken.objects.get(token=token)
+            
+            if not reset_token.is_valid():
+                return Response({
+                    'error': 'Invalid or expired reset token.'
+                }, status=400)
+            
+            # Reset password
+            user = reset_token.user
+            user.set_password(password)
+            user.save()
+            
+            # Mark token as used
+            reset_token.is_used = True
+            reset_token.save()
+            
+            return Response({
+                'message': 'Password has been reset successfully.'
+            })
+            
+        except PasswordResetToken.DoesNotExist:
+            return Response({
+                'error': 'Invalid or expired reset token.'
+            }, status=400)
+    
+    return Response(serializer.errors, status=400)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def validate_reset_token(request, token):
+    """Validate if reset token is still valid"""
+    try:
+        reset_token = PasswordResetToken.objects.get(token=token)
+        
+        if reset_token.is_valid():
+            return Response({
+                'valid': True,
+                'email': reset_token.user.email
+            })
+        else:
+            return Response({
+                'valid': False,
+                'error': 'Token has expired or been used.'
+            }, status=400)
+            
+    except PasswordResetToken.DoesNotExist:
+        return Response({
+            'valid': False,
+            'error': 'Invalid token.'
+        }, status=400)

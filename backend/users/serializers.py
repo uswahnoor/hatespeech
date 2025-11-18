@@ -62,3 +62,26 @@ class APIKeySerializer(serializers.ModelSerializer):
     class Meta:
         model = APIKey
         fields = ['id', 'key', 'created_at']
+
+
+class ForgotPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate_email(self, value):
+        try:
+            user = User.objects.get(email=value.lower())
+            return value.lower()
+        except User.DoesNotExist:
+            # Don't reveal if email exists or not
+            return value.lower()
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    token = serializers.CharField()
+    password = serializers.CharField(write_only=True, validators=[validate_password])
+    confirm_password = serializers.CharField(write_only=True)
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['confirm_password']:
+            raise serializers.ValidationError({"password": "Passwords don't match"})
+        return attrs
