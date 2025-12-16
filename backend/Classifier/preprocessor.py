@@ -1,56 +1,43 @@
-import spacy
 import re
-import json
+from .custom_classifier import CustomHateSpeechClassifier
 
 class HateSpeechDetector:
-    def __init__(self, json_path="hate_words.json",
-                 replacement_word="worst",
-                 model_path="transformer_classifier_checkpoint_best_best.pth",
-                 tokenizer_path="tokenizer.json", rating_threshold=2):
-
-        # Load hate words from JSON
-        with open(json_path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        self.hate_words = set(word.lower() for word in data.get("hate_words", []))
-
-        self.replacement_word = replacement_word
-        self.rating_threshold = rating_threshold
-
-        # Load spaCy
-        self.nlp = spacy.load("en_core_web_sm", disable=["ner", "parser"])
-
-        # Initialize the transformer classifier
-        from .utilities import TransformerClassifier
-        import os
-        # Convert relative paths to absolute paths if needed
-        if not os.path.isabs(model_path):
-            base_dir = os.path.dirname(os.path.abspath(__file__))
-            model_path = os.path.join(base_dir, model_path)
-        if not os.path.isabs(tokenizer_path):
-            base_dir = os.path.dirname(os.path.abspath(__file__))
-            tokenizer_path = os.path.join(base_dir, tokenizer_path)
-            
-        self.classifier = TransformerClassifier(model_path, tokenizer_path)
+    def __init__(self, **kwargs):
+        """
+        Initialize the hate speech detector using the custom trained model.
+        
+        Uses the custom-trained model from the custom_model folder.
+        """
+        # Initialize the custom hate speech classifier
+        self.classifier = CustomHateSpeechClassifier()
 
     def preprocess_text(self, text):
-        # Lowercase & remove URLs, mentions, hashtags
-        text = re.sub(r"http\S+|www\S+|@\w+|#\w+", "", text.lower())
-
-        # Replace hate words
-        tokens = text.split()
-        tokens = [self.replacement_word if t in self.hate_words else t for t in tokens]
-        text = " ".join(tokens)
-
-        # Lemmatization & stopword removal
-        doc = self.nlp(text)
-        tokens = [token.lemma_ for token in doc if not token.is_stop]
-
-        return " ".join(tokens)
+        """
+        Minimal preprocessing - the model handles text understanding.
+        
+        Only removes URLs, mentions, and hashtags that could confuse the model.
+        """
+        # Remove URLs, mentions, and hashtags
+        text = re.sub(r"http\S+|www\S+|@\w+|#\w+", "", text)
+        # Remove extra whitespace
+        text = " ".join(text.split())
+        return text
 
     def predict(self, text):
+        """
+        Predict if text contains hate speech.
+        
+        Returns:
+            tuple: (label, confidence, sentiment)
+                - label: 1 for hate speech/offensive, 0 for safe
+                - confidence: float between 0 and 1
+                - sentiment: "negative" for hate/offensive, "positive" for safe
+        """
         clean_text = self.preprocess_text(text)
         label, confidence = self.classifier.predict(clean_text)
-        sentiment = "negative" if label == 1 else "neutral"
+        
+        # sentiment: negative if label=1 (hate/offensive), positive if label=0 (safe)
+        sentiment = "negative" if label == 1 else "positive"
 
         return label, confidence, sentiment
     

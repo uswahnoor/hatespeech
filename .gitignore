@@ -114,3 +114,12 @@ Thumbs.db
 .vercel
 *.tsbuildinfo
 next-env.d.ts
+
+# Large model files (exceeds GitHub limit - download separately)
+backend/Classifier/custom_model/model.safetensors
+backend/Classifier/model_cache/
+
+# Large model files (download separately or from releases)
+backend/Classifier/custom_model/model.safetensors
+backend/Classifier/model_cache/
+
